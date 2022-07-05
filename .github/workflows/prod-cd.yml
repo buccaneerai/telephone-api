@@ -4,7 +4,7 @@ on:
     branches: [ master ]
 env:
   STAGE: local
-  SERVICE_NAME: PACKAGE_NAME
+  SERVICE_NAME: telephone-api
 jobs:
   deploy:
     runs-on: ubuntu-latest
