@@ -30,15 +30,18 @@ const createCall = ({
   apiSecret = process.env.TWILIO_API_SECRET,
   accountSid = process.env.TWILIO_ACCOUNT_ID,
   phoneNumberFrom = process.env.TWILIO_PHONE_NUM,
+  _twilio = twilio,
+  _makeCall = makeCall,
+  _startStreamForCall = startStreamForCall,
 } = {}) => (req, res) => {
   const to = get(req, 'body.phoneNumberTo');
   const telephoneCallId = get(req, 'body.telephoneCallId');
   const token = get(req, 'body.telephoneCallToken');
-  const client = twilio(apiKey, apiSecret, {accountSid});
+  const client = _twilio(apiKey, apiSecret, {accountSid});
   const twiml = callWorkflowXML();
-  const url = `${baseUrl}?telephoneStreamId=${telephoneCallId}&telephoneCallToken=${token}`;
-  makeCall({client})({to, from: phoneNumberFrom, twiml})
-    .then(startStreamForCall({client, url}))
+  const url = `${baseUrl}?telephoneCallId=${telephoneCallId}&telephoneCallToken=${token}`;
+  const promise = _makeCall({client})({to, from: phoneNumberFrom, twiml})
+    .then(_startStreamForCall({client, url}))
     .then(mediaStream => res.json({
       twilioCallId: mediaStream.call_sid,
       twilioMediaStreamId: mediaStream.sid,
@@ -47,6 +50,7 @@ const createCall = ({
       logError(err.message, {error: JSON.stringify(err)});
       res.status(500);
     });
+  return promise;
 };
 
 module.exports = createCall;
