@@ -10,7 +10,6 @@ const {
   scan,
   share,
   shareReplay,
-  tap,
   withLatestFrom
 } = require('rxjs/operators');
 const {conduit} = require('@buccaneerai/rxjs-socketio');
