@@ -1,15 +1,16 @@
 const qs = require('qs');
 const randomstring = require('randomstring');
 const get = require('lodash/get');
-const {concat,of,merge} = require('rxjs');
+const {concat,merge} = require('rxjs');
 const {
   delay,
+  delayWhen,
   filter,
   map,
-  mapTo,
-  mergeMap,
   scan,
-  share
+  share,
+  shareReplay,
+  withLatestFrom
 } = require('rxjs/operators');
 const {conduit} = require('@buccaneerai/rxjs-socketio');
 
@@ -25,30 +26,65 @@ const isStopMessage = () => isEvent('stop');
 
 const getQueryStringFromUrl = url => url.replace(/^.*\?/, '');
 
+const getStreamConfig = ({
+  encounterId,
+  telephoneCallId,
+  audioEncoding = 'audio/x-mulaw',
+  sampleRate = 8000,
+  saveRawAudio = true,
+  saveRawSTT = true,
+  saveWords = true,
+  saveWindows = true,
+  _randomstring = randomstring,
+}) => ({
+  inputType: 'telephoneCall',
+  encounterId,
+  telephoneCallId,
+  streamId: _randomstring.generate(7),
+  audioEncoding,
+  sampleRate,
+  saveRawAudio,
+  saveRawSTT,
+  saveWords,
+  saveWindows,
+});
+
 const generateSocketioStream = ({
-  audioChunk$,
-  stop$,
-  config,
+  delayTime = 3000,
   url = process.env.NOTESTREAM_API_URL,
   token = process.env.JWT_TOKEN,
-  _conduit = conduit,
+  _conduit = conduit
+} = {}) => ({
+  audioChunk$,
+  stop$,
+  config$,
 }) => {
-  const {streamId} = config;
-  const firstMessage$ = of({topic: 'new-stream', ...config}).pipe(delay(3000));
+  const configSub$ = config$.pipe(shareReplay(1));
+  const firstMessage$ = configSub$.pipe(
+    map(config => ({topic: 'new-stream', ...config})),
+    delay(delayTime)
+  );
   const audioMessage$ = audioChunk$.pipe(
     scan((acc, next) => [next, acc[1] + 1], [null, -1]),
-    map(([chunk, i]) => ({
-      streamId,
+    withLatestFrom(configSub$),
+    map(([[chunk, i], config]) => ({
+      streamId: config.streamId,
       topic: 'next-chunk',
       index: i,
       binary: chunk
     }))
   );
-  const stopMessage$ = stop$.pipe(mapTo({streamId, topic: 'stop'}));
+  const stopMessage$ = stop$.pipe(
+    withLatestFrom(configSub$),
+    map(([,config]) => ({streamId: config.streamId, topic: 'stop'}))
+  );
+  const completeMessage$ = configSub$.pipe(
+    map(config => ({streamId: config.streamId, topic: 'complete'}))
+  );
   const socketioMessage$ = concat(
     firstMessage$,
     merge(audioMessage$, stopMessage$),
-    of({streamId, topic: 'complete'})
+    completeMessage$
   ).pipe(
     _conduit({
       url,
@@ -66,34 +102,16 @@ const generateSocketioStream = ({
 const consumeOneClientStream = ({
   request,
   // socket,
-  audioEncoding = 'audio/x-mulaw',
-  sampleRate = 8000,
-  saveRawAudio = true,
-  saveRawSTT = true,
-  saveWords = true,
-  saveWindows = true,
+  shouldOutputMessages = false,
   _authorizeCallOrThrow = authorizeCallOrThrow,
-  _generateSocketioStream = generateSocketioStream,
-  _randomstring = randomstring,
+  _generateSocketioStream = generateSocketioStream(),
+  _getStreamConfig = getStreamConfig,
 }) => event$ => {
   const url = get(request, 'url');
   const queryString = getQueryStringFromUrl(url);
   const query = qs.parse(queryString);
   const telephoneCallId = get(query, 'telephoneCallId');
   const telephoneCallToken = get(query, 'telephoneCallToken');
-  const streamId = _randomstring.generate(7);
-  const streamConfig = {
-    inputType: 'telephoneCall',
-    telephoneCallId,
-    telephoneCallToken,
-    streamId,
-    audioEncoding,
-    sampleRate,
-    saveRawAudio,
-    saveRawSTT,
-    saveWords,
-    saveWindows,
-  };
   const eventSub$ = event$.pipe(share());
   const message$ = eventSub$.pipe(map(({data}) => data));
   const messageSub$ = message$.pipe(share());
@@ -103,30 +121,39 @@ const consumeOneClientStream = ({
     filter(isStopMessage()),
     share()
   );
-  const authorizeOrThrow$ = _authorizeCallOrThrow({
+  const telephoneCall$ = _authorizeCallOrThrow({
     telephoneCallId,
     telephoneCallToken
-  });
-  const audioChunk$ = authorizeOrThrow$.pipe(
-    mergeMap(() => messageSub$.pipe(
-      filter(isAudioMessage()),
-      map(message => get(message, 'mediaStream.payload')),
-      filter(payload => !!payload),
-      map(payload => Buffer.from(payload, 'base64')),
-      share()
-    ))
+  }).pipe(shareReplay(1));
+  const audioChunk$ = messageSub$.pipe(
+    filter(isAudioMessage()),
+    map(message => get(message, 'media.payload')),
+    filter(payload => !!payload),
+    map(payload => Buffer.from(payload, 'base64')),
+    delayWhen(() => telephoneCall$), // buffer until auth is complete
+    share()
+  );
+  const config$ = telephoneCall$.pipe(
+    map(call => _getStreamConfig({
+      telephoneCallId,
+      encounterId: get(call, 'encounterId'),
+    })),
+    shareReplay(1)
   );
   const socketioMessage$ = _generateSocketioStream({
-    stop$,
     audioChunk$,
-    config: streamConfig,
+    config$,
+    stop$,
   });
-  // our stream does not need to output anything. It simply passes the stream
-  // on to the socket.io API
+  // in production, our stream does not need to output anything.
+  // It simply passes the stream on to the socket.io API
   const output$ = socketioMessage$.pipe(
-    filter(() => false)
+    filter(() => shouldOutputMessages)
   );
   return output$;
 };
 
 module.exports = consumeOneClientStream;
+module.exports.testExports = {
+  generateSocketioStream
+};

@@ -38,10 +38,10 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
-"@buccaneerai/graphql-sdk@^2.38.0":
-  version "2.38.0"
-  resolved "https://npm.pkg.github.com/download/@buccaneerai/graphql-sdk/2.38.0/6fa142e5292ad870b456615a9fa137dc6528b77a9591c25ad0bdb899b1778dc7#d1d7abc8d7604974f0809d917f59c860c4bb3c4a"
-  integrity sha512-DktB2jcffxCpPrGpBCI2ai1mWLTxJZy7iR0Su3xLNHSCtaLVZUtIH3dSXbYehFNKcqtiwfGo3SQtKjEJmzp/6A==
+"@buccaneerai/graphql-sdk@^2.39.0":
+  version "2.39.0"
+  resolved "https://npm.pkg.github.com/download/@buccaneerai/graphql-sdk/2.39.0/f328c03fb39e6bae94268b18d92bf70566f6d9bf10f54d414a1c195a1054ef8c#7eaf6735d04a5a0038e1b240afa171ae06aacbd7"
+  integrity sha512-bnJo5bYLYbEmKL8LU0RSYf0e/OqM68oQM0g7H6Kpbcn/xFg230W10YTxKMwwNAsA8FZNV1T8eCTBK0Q0LIh63g==
   dependencies:
     graphql "^15.5.0"
     graphql-request "^3.4.0"
@@ -2311,10 +2311,10 @@ lru-cache@^6.0.0:
   dependencies:
     yallist "^4.0.0"
 
-luxon@^1.25.0:
-  version "1.25.0"
-  resolved "https://registry.yarnpkg.com/luxon/-/luxon-1.25.0.tgz#d86219e90bc0102c0eb299d65b2f5e95efe1fe72"
-  integrity sha512-hEgLurSH8kQRjY6i4YLey+mcKVAWXbDNlZRmM6AgWDJ1cY3atl8Ztf5wEY7VBReFbmGnwQPz7KYJblL8B2k0jQ==
+luxon@^2.4.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/luxon/-/luxon-2.4.0.tgz#9435806545bb32d4234dab766ab8a3d54847a765"
+  integrity sha512-w+NAwWOUL5hO0SgwOHsMBAmZ15SoknmQXhSO0hIbJCAmPKSsGeK8MlmhYh2w6Iib38IxN2M+/ooXWLbeis7GuA==
 
 make-dir@^3.0.0:
   version "3.1.0"

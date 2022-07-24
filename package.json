@@ -23,7 +23,7 @@
     "sinon": "^7.2.2"
   },
   "dependencies": {
-    "@buccaneerai/graphql-sdk": "^2.38.0",
+    "@buccaneerai/graphql-sdk": "^2.39.0",
     "@buccaneerai/logging-utils": "^1.0.12",
     "@buccaneerai/rxjs-socketio": "^4.1.0",
     "aws-sdk": "^2.438.0",
@@ -39,7 +39,7 @@
     "joi": "^14.0.0",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.11",
-    "luxon": "^1.25.0",
+    "luxon": "^2.4.0",
     "qs": "^6.10.5",
     "randomstring": "^1.2.2",
     "round-to": "^4.1.0",
