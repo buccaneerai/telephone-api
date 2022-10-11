@@ -1,3 +1,10 @@
+# [1.0.0-dev.2](https://github.com/buccaneerai/telephone-api/compare/v1.0.0-dev.1...v1.0.0-dev.2) (2022-10-11)
+
+
+### Bug Fixes
+
+* THR-214 Bump version ([118d54a](https://github.com/buccaneerai/telephone-api/commit/118d54a4f9e1c70d510bbc87b10f77477c19c24f))
+
 # 1.0.0-dev.1 (2022-10-07)
 
 
