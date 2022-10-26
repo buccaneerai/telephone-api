@@ -53,7 +53,7 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "npx nodemon ./src/index.js",
-    "debug": "npx nodemon debug ./src/index.js --inspect",
+    "debug": "node inspect ./src/index.js",
     "lint": "eslint -c .eslintrc ./src",
     "cli": "node ./scripts/index.js",
     "test": "START_SERVER=false SUPPRESS_LOGS=1 mocha \"./{,!(node_modules)/**/}*.test.js\" --exit",

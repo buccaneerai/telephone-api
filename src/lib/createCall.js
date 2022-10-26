@@ -16,13 +16,15 @@ const callWorkflowXML = ({
 
 // https://www.twilio.com/docs/voice/api/media-streams
 const startStreamForCall = ({client, url}) => ({sid}) => {
+  debugger;
   const promise = client.calls(sid).streams.create({url});
   return promise;
 };
 
-const makeCall = ({client}) => ({to, from, twiml}) => (
-  client.calls.create({to, from, twiml})
-);
+const makeCall = ({client}) => ({to, from, twiml}) => {
+  debugger;
+  return client.calls.create({to, from, twiml});
+};
 
 const createCall = ({
   baseUrl = process.env.BASE_URL,
@@ -37,7 +39,7 @@ const createCall = ({
   const to = get(req, 'body.phoneNumberTo');
   const telephoneCallId = get(req, 'body.telephoneCallId');
   const token = get(req, 'body.telephoneCallToken');
-  const client = _twilio(apiKey, apiSecret, {accountSid});
+  const client = _twilio(accountSid, apiSecret);
   const twiml = callWorkflowXML();
   const url = `${baseUrl}?telephoneCallId=${telephoneCallId}&telephoneCallToken=${token}`;
   const promise = _makeCall({client})({to, from: phoneNumberFrom, twiml})
@@ -48,7 +50,7 @@ const createCall = ({
     }))
     .catch(err => {
       logError(err.message, {error: JSON.stringify(err)});
-      res.status(500);
+      res.status(500).send({error: JSON.stringify(err)});
     });
   return promise;
 };

@@ -34,9 +34,9 @@ const configureApp = () => {
   app.use(bodyParser.json());
 
   // Ping and healthcheck routes
-  app.get('/', (req, res, next) => res.sendStatus(204));
-  app.get('/pingz', (req, res, next) => res.sendStatus(204));
-  app.get('/health', (req, res, next) => res.sendStatus(204));
+  app.get('/', (req, res, next) => res.sendStatus(200));
+  app.get('/pingz', (req, res, next) => res.sendStatus(200));
+  app.get('/health', (req, res, next) => res.sendStatus(200));
 
   // API routes
   app.use(
