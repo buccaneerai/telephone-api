@@ -1,7 +1,7 @@
 const get = require('lodash/get');
 const {DateTime} = require('luxon');
 const {throwError} = require('rxjs');
-const {map, mapTo, mergeMap, tap} = require('rxjs/operators');
+const {map, mapTo, mergeMap} = require('rxjs/operators');
 
 const gql = require('@buccaneerai/graphql-sdk');
 
