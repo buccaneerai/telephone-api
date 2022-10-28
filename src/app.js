@@ -2,7 +2,6 @@ const WebSocket = require('ws');
 const express = require('express');
 const helmet = require('helmet');
 const compression = require('compression');
-const bodyParser = require('body-parser');
 const cors = require('cors');
 const expressJwt = require('express-jwt');
 const logger = require('@buccaneerai/logging-utils');
@@ -31,7 +30,8 @@ const configureApp = () => {
   app.use(helmet());
   app.use(cors());
   app.use(compression());
-  app.use(bodyParser.json());
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
 
   // Ping and healthcheck routes
   app.get('/', (req, res, next) => res.sendStatus(200));

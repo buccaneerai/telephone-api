@@ -1,55 +1,75 @@
 const get = require('lodash/get');
 const twilio = require('twilio');
 
-const {error} = require('@buccaneerai/logging-utils');
+const logger = require('@buccaneerai/logging-utils');
 
-const logError = error;
 const consentXML = '<Say voice="woman">Thread Medical is recording this call for your doctor\'s notetaking purposes.</Say>';
 const callWorkflowXML = ({
   askConsent = true,
+  wssUrl,
+  pauseLength,
 } = {}) => (`
-  <?xml version="1.0" encoding="UTF-8"?>
   <Response>
+    <Start>
+        <Stream name="telephone-api-stream" url="${wssUrl}" />
+    </Start>
     ${askConsent ? consentXML : ''}
+    <Pause length="${pauseLength}" />
   </Response>
 `);
 
-// https://www.twilio.com/docs/voice/api/media-streams
-const startStreamForCall = ({client, url}) => ({sid}) => {
-  debugger;
-  const promise = client.calls(sid).streams.create({url});
-  return promise;
-};
+// Example Gather Callback
+// <Response>
+//   <Gather input="speech" speechModel="experimental_conversations" speechTimeout="10" action="${timeoutUrl}" method="POST">
+//     ${askConsent ? consentXML : ''}
+//   </Gather>
+// </Response>
 
-const makeCall = ({client}) => ({to, from, twiml}) => {
-  debugger;
-  return client.calls.create({to, from, twiml});
+const makeCall = ({client}) => ({to, from, record, twiml, sendDigits}) => {
+  return client.calls.create({to, from, twiml, record, sendDigits});
 };
 
 const createCall = ({
   baseUrl = process.env.BASE_URL,
-  apiKey = process.env.TWILIO_API_KEY,
   apiSecret = process.env.TWILIO_API_SECRET,
   accountSid = process.env.TWILIO_ACCOUNT_ID,
   phoneNumberFrom = process.env.TWILIO_PHONE_NUM,
+  pauseLength = process.env.TWILIO_PAUSE_LENGTH || '1800',
+  _record = process.env.TWILIO_RECORD,
   _twilio = twilio,
-  _makeCall = makeCall,
-  _startStreamForCall = startStreamForCall,
+  _makeCall = makeCall
 } = {}) => (req, res) => {
-  const to = get(req, 'body.phoneNumberTo');
+  let record = _record || false;
+  if (record === 'false') {
+    record = false;
+  } else if (record === 'true') {
+    record = true;
+  }
+  let to = get(req, 'body.phoneNumberTo', '');
+  // to = to.replace('-', '').replace(' ', '').replace('(', '').replace(')', '');
+  let pin = get(req, 'body.telephonePin', '');
+  pin = pin.replace(/ /g, '').replace(/-/g, '');
+  let sendDigits;
+  if (pin) {
+    sendDigits = `www${pin}`;
+  }
   const telephoneCallId = get(req, 'body.telephoneCallId');
   const token = get(req, 'body.telephoneCallToken');
   const client = _twilio(accountSid, apiSecret);
-  const twiml = callWorkflowXML();
-  const url = `${baseUrl}?telephoneCallId=${telephoneCallId}&telephoneCallToken=${token}`;
-  const promise = _makeCall({client})({to, from: phoneNumberFrom, twiml})
-    .then(_startStreamForCall({client, url}))
-    .then(mediaStream => res.json({
-      twilioCallId: mediaStream.call_sid,
-      twilioMediaStreamId: mediaStream.sid,
-    }))
+  const wssUrl = `wss://${baseUrl}/${telephoneCallId}/${token}`;
+  const timeoutUrl = `https://${baseUrl}/api/v1/end/${telephoneCallId}/${token}`;
+  const twiml = callWorkflowXML({wssUrl, timeoutUrl, pauseLength});
+  logger.info(`Attempting to start twilio call... [telephoneCallId=${telephoneCallId} to=${to} pin=${pin} baseUrl=${baseUrl}]`);
+  const promise = _makeCall({client})({to, from: phoneNumberFrom, twiml, record, sendDigits})
+    .then((call) => {
+      logger.info(`Established twilio call! [sid=${call.sid}]`);
+      res.json({
+        twilioCallId: call.sid,
+      });
+    })
     .catch(err => {
-      logError(err.message, {error: JSON.stringify(err)});
+      logger.error(`Unable to establish twilio call! [telephoneCallId=${telephoneCallId} to=${to} pin=${pin} baseUrl=${baseUrl}]`);
+      logger.error(err.message, {error: JSON.stringify(err)});
       res.status(500).send({error: JSON.stringify(err)});
     });
   return promise;

@@ -1,7 +1,7 @@
 const get = require('lodash/get');
 const {DateTime} = require('luxon');
 const {throwError} = require('rxjs');
-const {map, mapTo, mergeMap} = require('rxjs/operators');
+const {map, mapTo, mergeMap, tap} = require('rxjs/operators');
 
 const gql = require('@buccaneerai/graphql-sdk');
 
@@ -12,15 +12,18 @@ const errors = {
 const instantiateClient = ({
   url = process.env.GRAPHQL_URL,
   token = process.env.JWT_TOKEN,
-  _gql = gql
-} = {}) => _gql({url, token});
+  _gql = gql.default
+} = {}) => {
+  return _gql({url, token});
+}
 
 const mapResponseToCall = () => response => get(response, 'telephoneCalls[0]', null);
 
+// Expire the call "tomorrow at end of day"
 const callIsExpired = call => {
   const expiresISO = get(call, 'expiration');
   if (!expiresISO) return true;
-  const expiration = DateTime.fromISO(expiresISO);
+  const expiration = DateTime.fromISO(expiresISO).plus({days: 1}).endOf('day');
   const now = DateTime.now();
   const isExpired = now > expiration;
   return isExpired;
@@ -40,7 +43,6 @@ const authorizeCallOrThrow = ({
       && call._id === telephoneCallId
       && call.token === telephoneCallToken
       && !call.isClaimed
-      // check expiration of token
       && !callIsExpired(call)
       ? _updateTelephoneCall({ // claim the token so it cannot be re-used
         docId: telephoneCallId,
