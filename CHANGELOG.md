@@ -1,3 +1,12 @@
+# [1.0.0-dev.3](https://github.com/buccaneerai/telephone-api/compare/v1.0.0-dev.2...v1.0.0-dev.3) (2022-10-28)
+
+
+### Features
+
+* THR-108 Fix lint ([1a4f7d1](https://github.com/buccaneerai/telephone-api/commit/1a4f7d16c7f5c46ca49e8ba79eea027138500c2c))
+* THR-108 Init code commit ([0220589](https://github.com/buccaneerai/telephone-api/commit/02205894947c69c659574c18ca50ea77c6ccf409))
+* THR-108 Working telephone api call ([6825dd8](https://github.com/buccaneerai/telephone-api/commit/6825dd8892303a7cb156fd536abb8516ea4ca1bf))
+
 # [1.0.0-dev.2](https://github.com/buccaneerai/telephone-api/compare/v1.0.0-dev.1...v1.0.0-dev.2) (2022-10-11)
 
 
