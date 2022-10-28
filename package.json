@@ -9,6 +9,8 @@
   "devDependencies": {
     "@buccaneerai/rxjs-fs": "^2.0.0",
     "@buccaneerai/rxjs-ws": "^1.1.0",
+    "@semantic-release/changelog": "^6.0.1",
+    "@semantic-release/git": "^10.0.1",
     "chai": "^4.2.0",
     "commander": "^9.3.0",
     "eslint": "^7.22.0",
@@ -17,16 +19,14 @@
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jsx-a11y": "^6.1.2",
     "eslint-plugin-react": "^7.11.1",
-    "@semantic-release/changelog": "^6.0.1",
-    "@semantic-release/git": "^10.0.1",
-    "semantic-release-export-data": "^1.0.0",
-    "mocha": "^5.2.0",
+    "mocha": "^7.0.0",
     "nodemon": "^2.0.2",
     "rxjs-marbles": "^5.0.3",
+    "semantic-release-export-data": "^1.0.0",
     "sinon": "^7.2.2"
   },
   "dependencies": {
-    "@buccaneerai/graphql-sdk": "^2.39.0",
+    "@buccaneerai/graphql-sdk": "^2.53.4",
     "@buccaneerai/logging-utils": "^1.0.12",
     "@buccaneerai/rxjs-socketio": "^4.1.0",
     "aws-sdk": "^2.438.0",
@@ -48,16 +48,17 @@
     "round-to": "^4.1.0",
     "rxjs": "^6.3.3",
     "twilio": "^3.77.3",
+    "wavefile": "^11.0.0",
     "ws": "^8.8.0"
   },
   "scripts": {
     "start": "node src/index.js",
     "dev": "npx nodemon ./src/index.js",
-    "debug": "npx nodemon debug ./src/index.js --inspect",
+    "debug": "node inspect ./src/index.js",
     "lint": "eslint -c .eslintrc ./src",
     "cli": "node ./scripts/index.js",
     "test": "START_SERVER=false SUPPRESS_LOGS=1 mocha \"./{,!(node_modules)/**/}*.test.js\" --exit",
-    "test:debug": "START_SERVER=false mocha \"./{,!(node_modules)/**/}*.test.js\" --exit",
+    "test:debug": "START_SERVER=false mocha inspect \"./{,!(node_modules)/**/}*.test.js\" --exit",
     "aws:ecr:createtoken": "node ./scripts/getEcrToken",
     "aws:ecs:update": "node ./scripts/redeploy"
   }

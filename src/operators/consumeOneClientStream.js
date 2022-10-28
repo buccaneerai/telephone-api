@@ -1,4 +1,3 @@
-const qs = require('qs');
 const randomstring = require('randomstring');
 const get = require('lodash/get');
 const {concat,merge} = require('rxjs');
@@ -13,6 +12,7 @@ const {
   withLatestFrom
 } = require('rxjs/operators');
 const {conduit} = require('@buccaneerai/rxjs-socketio');
+const logger = require('@buccaneerai/logging-utils');
 
 const authorizeCallOrThrow = require('../lib/authorizeCallOrThrow');
 
@@ -23,8 +23,6 @@ const isEvent = eventKey => message => get(message, 'event') === eventKey;
 // const isConnectedMessage = () => isEvent('connected');
 const isAudioMessage = () => isEvent('media');
 const isStopMessage = () => isEvent('stop');
-
-const getQueryStringFromUrl = url => url.replace(/^.*\?/, '');
 
 const getStreamConfig = ({
   encounterId,
@@ -67,12 +65,14 @@ const generateSocketioStream = ({
   const audioMessage$ = audioChunk$.pipe(
     scan((acc, next) => [next, acc[1] + 1], [null, -1]),
     withLatestFrom(configSub$),
-    map(([[chunk, i], config]) => ({
-      streamId: config.streamId,
-      topic: 'next-chunk',
-      index: i,
-      binary: chunk
-    }))
+    map(([[chunk, i], config]) => {
+      return {
+        streamId: config.streamId,
+        topic: 'next-chunk',
+        index: i,
+        binary: chunk
+      };
+    })
   );
   const stopMessage$ = stop$.pipe(
     withLatestFrom(configSub$),
@@ -108,12 +108,26 @@ const consumeOneClientStream = ({
   _getStreamConfig = getStreamConfig,
 }) => event$ => {
   const url = get(request, 'url');
-  const queryString = getQueryStringFromUrl(url);
-  const query = qs.parse(queryString);
-  const telephoneCallId = get(query, 'telephoneCallId');
-  const telephoneCallToken = get(query, 'telephoneCallToken');
+  const urlParts = url.split('/');
+  const telephoneCallId = urlParts[urlParts.length - 2];
+  const telephoneCallToken = urlParts[urlParts.length - 1];
+  let baseUrl = '';
+  for(let i = 0; i < urlParts.length - 2; i++) {
+    baseUrl += urlParts[i];
+  }
+  logger.info(`Established twilio socket connection. \
+[baseUrl=${baseUrl} telephoneCallId=${telephoneCallId} \
+telephoneCallToken=${telephoneCallToken.substr(0,5)}...]`)
+
   const eventSub$ = event$.pipe(share());
-  const message$ = eventSub$.pipe(map(({data}) => data));
+  const message$ = eventSub$.pipe(
+    map(({data}) => {
+      if (data.toString) {
+        return JSON.parse(data.toString());
+      }
+      return data;
+    })
+  );
   const messageSub$ = message$.pipe(share());
   // const connected$ = messageSub$.pipe(filter(isConnectedMessage()));
   // const start$ = messageSub$.pipe(filter(isStartMessage()));
@@ -149,6 +163,9 @@ const consumeOneClientStream = ({
   // It simply passes the stream on to the socket.io API
   const output$ = socketioMessage$.pipe(
     filter(() => shouldOutputMessages)
+    // map((data) => {
+    //   console.log(data);
+    // })
   );
   return output$;
 };
