@@ -1,3 +1,10 @@
+# [1.0.0-dev.4](https://github.com/buccaneerai/telephone-api/compare/v1.0.0-dev.3...v1.0.0-dev.4) (2022-10-31)
+
+
+### Bug Fixes
+
+* THR-108 Bump graphql-sdk version ([c2d0f88](https://github.com/buccaneerai/telephone-api/commit/c2d0f88142115ab706418488ac8b5a11ecbda0a5))
+
 # [1.0.0-dev.3](https://github.com/buccaneerai/telephone-api/compare/v1.0.0-dev.2...v1.0.0-dev.3) (2022-10-28)
 
 
