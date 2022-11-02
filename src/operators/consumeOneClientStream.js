@@ -9,7 +9,7 @@ const {
   scan,
   share,
   shareReplay,
-  withLatestFrom
+  withLatestFrom,
 } = require('rxjs/operators');
 const {conduit} = require('@buccaneerai/rxjs-socketio');
 const logger = require('@buccaneerai/logging-utils');
@@ -59,7 +59,9 @@ const generateSocketioStream = ({
 }) => {
   const configSub$ = config$.pipe(shareReplay(1));
   const firstMessage$ = configSub$.pipe(
-    map(config => ({topic: 'new-stream', ...config})),
+    map(config => {
+      return ({topic: 'new-stream', ...config});
+    }),
     delay(delayTime)
   );
   const audioMessage$ = audioChunk$.pipe(

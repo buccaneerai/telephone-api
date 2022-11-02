@@ -26,7 +26,7 @@
     "sinon": "^7.2.2"
   },
   "dependencies": {
-    "@buccaneerai/graphql-sdk": "^2.53.6",
+    "@buccaneerai/graphql-sdk": "^2.53.7",
     "@buccaneerai/logging-utils": "^1.0.12",
     "@buccaneerai/rxjs-socketio": "^4.1.0",
     "aws-sdk": "^2.438.0",
