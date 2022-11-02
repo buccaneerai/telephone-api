@@ -1,3 +1,10 @@
+# [1.0.0-dev.5](https://github.com/buccaneerai/telephone-api/compare/v1.0.0-dev.4...v1.0.0-dev.5) (2022-11-02)
+
+
+### Bug Fixes
+
+* THR-108 Fix createRun ([4d271a1](https://github.com/buccaneerai/telephone-api/commit/4d271a1676a12d8c624aa8d06dbc0d4ca23a4894))
+
 # [1.0.0-dev.4](https://github.com/buccaneerai/telephone-api/compare/v1.0.0-dev.3...v1.0.0-dev.4) (2022-10-31)
 
 
