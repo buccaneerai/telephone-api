@@ -64,6 +64,7 @@ const createCall = ({
     .then((call) => {
       logger.info(`Established twilio call! [sid=${call.sid}]`);
       res.json({
+        telephoneCallId,
         twilioCallId: call.sid,
       });
     })
