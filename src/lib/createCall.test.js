@@ -42,6 +42,7 @@ describe('createCall', () => {
       expect(res.status.called).to.be.false;
       expect(res.json.calledOnce).to.be.true;
       expect(res.json.firstCall.args[0]).to.deep.equal({
+        telephonecallId: req.body.telephoneCallId,
         twilioCallId: fakeCall.sid
       });
       done();
