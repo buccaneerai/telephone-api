@@ -1,3 +1,12 @@
+# [1.0.0-dev.6](https://github.com/buccaneerai/telephone-api/compare/v1.0.0-dev.5...v1.0.0-dev.6) (2022-11-08)
+
+
+### Bug Fixes
+
+* Fix test ([50214ec](https://github.com/buccaneerai/telephone-api/commit/50214ec36e7fc21b874e146cd4d2c857f6a8952d))
+* Fix test ([1b96808](https://github.com/buccaneerai/telephone-api/commit/1b968085b3d20a43c633fa7a459c9f6b6ed2ec7e))
+* THR-268 Print message if user has not defined the BASE_URL ([3a9a702](https://github.com/buccaneerai/telephone-api/commit/3a9a7028cdb6496b2782d0707f99126663e3dc83))
+
 # [1.0.0-dev.5](https://github.com/buccaneerai/telephone-api/compare/v1.0.0-dev.4...v1.0.0-dev.5) (2022-11-02)
 
 
