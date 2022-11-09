@@ -10,13 +10,13 @@ const {
 
 const streamSid = 'MZ18ad3ab5a668481ce02b83e7395059f0';
 
-const connectedMessage = {
+const connectedMessage = Buffer.from(JSON.stringify({
   event: 'connected',
   protocol: 'Call',
   version: '1.0.0',
-};
+}));
 
-const startMessage = {
+const startMessage = Buffer.from(JSON.stringify({
   event: 'start',
   sequenceNumber: 2,
   start: {
@@ -32,9 +32,9 @@ const startMessage = {
     }
   },
   streamSid,
-};
+}));
 
-const stopMessage = {
+const stopMessage = Buffer.from(JSON.stringify({
   event: 'stop',
   sequenceNumber: '5',
   stop: {
@@ -42,9 +42,9 @@ const stopMessage = {
       callSid: 'CA123',
   },
   streamSid,
-};
+}));
 
-const mapAudioChunkToMediaMessage = () => ([audioChunk, index]) => ({
+const mapAudioChunkToMediaMessage = () => ([audioChunk, index]) => (Buffer.from(JSON.stringify({
   event: 'media',
   sequenceNumber: `${index + 3}`,
   media: {
@@ -56,7 +56,7 @@ const mapAudioChunkToMediaMessage = () => ([audioChunk, index]) => ({
     payload: audioChunk.toString('base64'),
   },
   streamSid,
-});
+})));
 
 describe('consumeOneClientStream', () => {
   it('should export a function', () => {
@@ -124,7 +124,10 @@ describe('consumeOneClientStream', () => {
       encounterId: 'myencounter',
       token: 'mycalltoken',
     };
-    const chunks = [Buffer.from('foobar0'), Buffer.from('foobar1')];
+    const chunks = [
+      Buffer.from('foobar0'),
+      Buffer.from('foobar1'),
+    ];
     const events = [
       {data: connectedMessage},
       {data: startMessage},
@@ -135,7 +138,7 @@ describe('consumeOneClientStream', () => {
     const event$ = m.cold('-0-1-2-3-(4|)', events);
     const params = {
       request: {
-        url: 'http://localhost:3008?telephoneCallId=mycallid&telephoneCallToken=mycalltoken'
+        url: 'http://localhost:3008/mycallid/mycalltoken'
       },
       shouldOutputMessages: true,
       _authorizeCallOrThrow: sinon.stub().returns(telephoneCall$),
@@ -156,6 +159,7 @@ describe('consumeOneClientStream', () => {
       {streamId, topic: 'stop'},
       {streamId, topic: 'complete'},
     ]);
+    debugger;
     m.expect(result$).toBeObservable(expected$);
   }));
 

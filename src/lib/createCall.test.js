@@ -30,7 +30,6 @@ describe('createCall', () => {
       phoneNumberFrom: '+1234567890',
       _twilio: sinon.stub().returns(fakeClient),
       _makeCall: sinon.stub().returns(startCall),
-      _startStreamForCall: sinon.stub().returns(() => Promise.resolve(fakeCallStream)),
     };
     const makeCall = createCall(params)(req, res).then(result => {
       expect(params._twilio.calledOnce).to.be.true;
@@ -40,15 +39,11 @@ describe('createCall', () => {
         to: req.body.phoneNumberTo,
         from: params.phoneNumberFrom,
       });
-      expect(params._startStreamForCall.calledOnce).to.be.true;
-      expect(params._startStreamForCall.firstCall.args[0]).to.deep.include({
-        url: `${params.baseUrl}?telephoneCallId=${req.body.telephoneCallId}&telephoneCallToken=${req.body.telephoneCallToken}`
-      })
       expect(res.status.called).to.be.false;
       expect(res.json.calledOnce).to.be.true;
       expect(res.json.firstCall.args[0]).to.deep.equal({
-        twilioCallId: fakeCall.sid,
-        twilioMediaStreamId: fakeCallStream.sid,
+        telephoneCallId: req.body.telephoneCallId,
+        twilioCallId: fakeCall.sid
       });
       done();
     });
