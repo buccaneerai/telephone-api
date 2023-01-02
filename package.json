@@ -1,6 +1,6 @@
 {
   "name": "telephone-api",
-  "version": "1.0.0-dev.8",
+  "version": "1.1.1-dev.1",
   "main": "src/index.js",
   "author": "Buccaneer LLC",
   "license": "UNLICENSED",

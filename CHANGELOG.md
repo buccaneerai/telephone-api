@@ -1,3 +1,14 @@
+## [1.1.1-dev.1](https://github.com/buccaneerai/telephone-api/compare/v1.1.0...v1.1.1-dev.1) (2023-01-02)
+
+
+### Bug Fixes
+
+* Automatically updating .github folder ([9f0bdae](https://github.com/buccaneerai/telephone-api/commit/9f0bdaed60534bb5a0716258da67f35f0d842320))
+* Automatically updating .github folder ([96e84ab](https://github.com/buccaneerai/telephone-api/commit/96e84abf7a689a3652e50f4a5dc5496e8c6da1d5))
+* Automatically updating .github folder ([1f7fd36](https://github.com/buccaneerai/telephone-api/commit/1f7fd364b63ac46c8abc0028c0bc3e603eaa3ebd))
+* Fix regular telephone call ([db6e68f](https://github.com/buccaneerai/telephone-api/commit/db6e68fe38be47c68ee19ad4dfa9a828b0844cdc))
+* THR-278 Remove old ECR repo ([93780b1](https://github.com/buccaneerai/telephone-api/commit/93780b11e6cbdfb881328b7363012df6fe22e20f))
+
 # [1.1.0](https://github.com/buccaneerai/telephone-api/compare/v1.0.0...v1.1.0) (2022-11-09)
 
 ### Bug Fixes
