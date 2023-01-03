@@ -46,11 +46,10 @@ const createCall = ({
     record = true;
   }
   let to = get(req, 'body.phoneNumberTo', '');
-  // to = to.replace('-', '').replace(' ', '').replace('(', '').replace(')', '');
-  let pin = get(req, 'body.telephonePin', '');
-  pin = pin.replace(/ /g, '').replace(/-/g, '');
   let sendDigits;
+  let pin = get(req, 'body.telephonePin', '');
   if (pin) {
+    pin = pin.replace(/ /g, '').replace(/-/g, '');
     sendDigits = `www${pin}`;
   }
   const telephoneCallId = get(req, 'body.telephoneCallId');
