@@ -1,3 +1,10 @@
+## [1.1.1-dev.3](https://github.com/buccaneerai/telephone-api/compare/v1.1.1-dev.2...v1.1.1-dev.3) (2023-01-05)
+
+
+### Bug Fixes
+
+* Remove logging ([b29ebe8](https://github.com/buccaneerai/telephone-api/commit/b29ebe8a8a3e971248f3a6cd6eabc1533da181e1))
+
 ## [1.1.1-dev.2](https://github.com/buccaneerai/telephone-api/compare/v1.1.1-dev.1...v1.1.1-dev.2) (2023-01-05)
 
 
