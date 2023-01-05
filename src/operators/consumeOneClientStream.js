@@ -125,6 +125,7 @@ telephoneCallToken=${telephoneCallToken.substr(0,5)}...]`)
   const message$ = eventSub$.pipe(
     map(({data}) => {
       if (data.toString) {
+        console.log(`data: ${data.toString()}`);
         return JSON.parse(data.toString());
       }
       return data;
