@@ -10,6 +10,7 @@ const {
   share,
   shareReplay,
   withLatestFrom,
+  tap
 } = require('rxjs/operators');
 const {conduit} = require('@buccaneerai/rxjs-socketio');
 const logger = require('@buccaneerai/logging-utils');
@@ -144,10 +145,19 @@ telephoneCallToken=${telephoneCallToken.substr(0,5)}...]`)
   }).pipe(shareReplay(1));
   const audioChunk$ = messageSub$.pipe(
     filter(isAudioMessage()),
+    tap(() => {
+      console.log('made it past isAudioMessage');
+    }),
     map(message => get(message, 'media.payload')),
     filter(payload => !!payload),
+    tap(() => {
+      console.log('made it past isPayload');
+    }),
     map(payload => Buffer.from(payload, 'base64')),
     delayWhen(() => telephoneCall$), // buffer until auth is complete
+    tap(() => {
+      console.log('made it past auth');
+    }),
     share()
   );
   const config$ = telephoneCall$.pipe(
