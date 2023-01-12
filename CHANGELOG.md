@@ -1,3 +1,12 @@
+## [1.1.2-dev.1](https://github.com/buccaneerai/telephone-api/compare/v1.1.1...v1.1.2-dev.1) (2023-01-12)
+
+
+### Bug Fixes
+
+* Add logging ([380c162](https://github.com/buccaneerai/telephone-api/commit/380c162ca11e11832795189ea96b0b73968d832f))
+* **cd:** resolved CD workflow issues ([e937995](https://github.com/buccaneerai/telephone-api/commit/e937995a8f5bee881cf5703ee902911e4dafdeba))
+* Remove logging ([b29ebe8](https://github.com/buccaneerai/telephone-api/commit/b29ebe8a8a3e971248f3a6cd6eabc1533da181e1))
+
 ## [1.1.1-dev.3](https://github.com/buccaneerai/telephone-api/compare/v1.1.1-dev.2...v1.1.1-dev.3) (2023-01-05)
 
 
