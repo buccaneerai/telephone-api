@@ -11,9 +11,15 @@ const consumeMessages = (
   const socketStream$$ = new Observable(obs => {
     wsServer.on('connection', (socket, request) => {
       const individualSocket$ = new Observable(_obs => {
-        socket.on('message', data => _obs.next({data, context: {socket, request}}));
-        socket.on('error', err => _obs.error(err));
-        socket.on('close', () => _obs.complete());
+        socket.on('message', (data) => {
+          _obs.next({data, context: {socket, request}});
+        });
+        socket.on('error', (err) => {
+          return _obs.error(err);
+        });
+        socket.on('close', () => {
+          return _obs.complete();
+        });
       }).pipe(_consumeOneClientStream({socket, request}));
       obs.next(individualSocket$);
     });

@@ -1,8 +1,16 @@
-## [1.1.1](https://github.com/buccaneerai/telephone-api/compare/v1.1.0...v1.1.1) (2023-01-03)
+## [1.1.1-dev.3](https://github.com/buccaneerai/telephone-api/compare/v1.1.1-dev.2...v1.1.1-dev.3) (2023-01-05)
 
 
 ### Bug Fixes
 
+* Remove logging ([b29ebe8](https://github.com/buccaneerai/telephone-api/commit/b29ebe8a8a3e971248f3a6cd6eabc1533da181e1))
+
+## [1.1.1-dev.2](https://github.com/buccaneerai/telephone-api/compare/v1.1.1-dev.1...v1.1.1-dev.2) (2023-01-05)
+
+
+### Bug Fixes
+
+* Add logging ([380c162](https://github.com/buccaneerai/telephone-api/commit/380c162ca11e11832795189ea96b0b73968d832f))
 * Automatically updating .github folder ([9f0bdae](https://github.com/buccaneerai/telephone-api/commit/9f0bdaed60534bb5a0716258da67f35f0d842320))
 * Automatically updating .github folder ([96e84ab](https://github.com/buccaneerai/telephone-api/commit/96e84abf7a689a3652e50f4a5dc5496e8c6da1d5))
 * Automatically updating .github folder ([1f7fd36](https://github.com/buccaneerai/telephone-api/commit/1f7fd364b63ac46c8abc0028c0bc3e603eaa3ebd))

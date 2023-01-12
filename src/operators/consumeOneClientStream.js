@@ -9,7 +9,7 @@ const {
   scan,
   share,
   shareReplay,
-  withLatestFrom,
+  withLatestFrom
 } = require('rxjs/operators');
 const {conduit} = require('@buccaneerai/rxjs-socketio');
 const logger = require('@buccaneerai/logging-utils');
@@ -171,6 +171,7 @@ telephoneCallToken=${telephoneCallToken.substr(0,5)}...]`)
   );
   return output$;
 };
+
 
 module.exports = consumeOneClientStream;
 module.exports.testExports = {
